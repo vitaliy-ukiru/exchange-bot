@@ -1,5 +1,5 @@
-from collections.abc import Iterable
 from datetime import timedelta
+from typing import AsyncIterable
 
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
@@ -46,7 +46,7 @@ class DIProvider(Provider):
         return storage
 
     @provide(scope=Scope.APP)
-    async def get_cbr_fetcher(self) -> RatesFetcher:
+    async def get_cbr_fetcher(self) -> AsyncIterable[RatesFetcher]:
         async with ClientSession() as session:
             fetcher = CBRRatesFetcher(session)
             yield fetcher
