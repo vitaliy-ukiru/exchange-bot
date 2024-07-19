@@ -2,10 +2,12 @@ import asyncio
 
 import click
 from aiogram import Bot
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dishka import make_async_container
 from redis.asyncio import Redis
 
 from exchangebot.infrastructure import logging
+from exchangebot.infrastructure.daily.update_rates import bind_daily_task
 from exchangebot.infrastructure.di.provider import DIProvider
 from exchangebot.presentation.telegram.main import create_dp
 
@@ -13,7 +15,6 @@ from exchangebot.presentation.telegram.main import create_dp
 @click.group()
 def cli():
     logging.setup()
-
 
 
 async def _check_redis_connection(client: Redis):
@@ -29,7 +30,11 @@ async def _main_polling(skip_updates: bool):
     dp = create_dp(container)
     bot = await container.get(Bot)
 
+    scheduler = await container.get(AsyncIOScheduler)
+    await bind_daily_task(scheduler, container)
+
     try:
+        scheduler.start()
         await dp.start_polling(bot, skip_updates=skip_updates)
     finally:
         await container.close()

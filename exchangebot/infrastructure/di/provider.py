@@ -7,7 +7,12 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.redis import RedisStorage
 from aiohttp import ClientSession
+from apscheduler.executors.asyncio import AsyncIOExecutor
+from apscheduler.jobstores.memory import MemoryJobStore
+from apscheduler.jobstores.redis import RedisJobStore
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dishka import Provider, provide, Scope, AnyOf
+from pytz import utc
 from redis.asyncio import Redis
 
 from exchangebot.application.interfaces import CurrencyRateFinder, CurrencyRateRepository, Usecase
@@ -76,3 +81,18 @@ class DIProvider(Provider):
             finder=finder,
             min_duration_between_fetch=timedelta(minutes=cfg.force_reload_rates_minutes)
         )
+
+    @provide(scope=Scope.APP)
+    def get_scheduler(self, cfg: Config) -> AsyncIOScheduler:
+        DEFAULT = "default"
+
+        job_stores = {
+            DEFAULT: MemoryJobStore()
+        }
+        executors = {DEFAULT: AsyncIOExecutor()}
+        job_defaults = {"coalesce": False, "max_instances": 3, "misfire_grace_time": 3600}
+
+        scheduler = AsyncIOScheduler(
+            jobstores=job_stores, executors=executors, job_defaults=job_defaults, timezone=utc
+        )
+        return scheduler
