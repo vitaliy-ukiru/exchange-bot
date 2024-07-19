@@ -1,0 +1,19 @@
+services:
+  redis:
+    image: "redis:7.2.5"
+    container_name: redis_db
+    restart: on-failure
+  app:
+    container_name: cbr-exchange-bot
+    restart: unless-stopped
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: 'redis://redis:6379/0'
+
+    depends_on:
+      - redis
+volumes:
+
