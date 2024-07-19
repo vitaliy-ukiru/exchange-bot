@@ -9,8 +9,7 @@ class Config(BaseSettings):
     redis_url: Annotated[RedisDsn, Field(default="redis://localhost:6379/0")]
     redis_prefix: Annotated[str, Field(default="cbr-exchange-bot")]
     force_reload_rates_minutes: int = 12 * 60  # once time at 12 hours
-    scheduler_job_store_db: int = 2
-    update_rates_cron: Annotated[str, Field(default="0 0 * * *")] # every day at 12:00 AM
+    update_rates_cron: Annotated[str, Field(default="0 0 * * *")]  # every day at 12:00 AM
 
     model_config = SettingsConfigDict(
         extra="ignore",
