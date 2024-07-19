@@ -61,4 +61,9 @@ class Service(Usecase):
         return from_rate.convert(to_rate, amount)
 
     async def get_all_rates(self) -> list[CurrencyRate]:
+        rates = await self._finder.get_all_currencies_rates()
+        if rates:
+            return rates
+
+        await self.load_rates()
         return await self._finder.get_all_currencies_rates()
