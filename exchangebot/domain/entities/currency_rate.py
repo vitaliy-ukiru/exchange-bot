@@ -52,7 +52,7 @@ class CurrencyRate:
             return amount
 
         if self.code == RUB:
-            return self.from_rub(amount)
+            return final_currency.from_rub(amount)
 
         amount_in_rub = self.in_rub(amount)
 
