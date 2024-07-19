@@ -25,7 +25,7 @@ class CurrencyRate:
         :param amount: Amount to convert
         :return: Amount in RUB
         """
-        return self.rate_to_rub * amount
+        return Money(self.rate_to_rub * amount)
 
     def from_rub(self, amount: Money) -> Money:
         """
@@ -33,7 +33,7 @@ class CurrencyRate:
         :param amount: amount in RUB
         :return: Amount in current currency
         """
-        return amount / self.rate_to_rub
+        return Money(amount / self.rate_to_rub)
 
     def convert(self, final_currency: Self, amount: Money) -> Money:
         """
