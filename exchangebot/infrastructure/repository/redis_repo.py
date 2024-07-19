@@ -55,7 +55,7 @@ class CurrencyRatesRepoImpl(CurrencyRateFinder, CurrencyRateRepository):
             return None
 
         model = RateModel.model_validate_json(data)
-        return convert_model_to_entity(code, model)
+        return convert_model_to_entity(model)
 
     def _format_key(self, code: str):
         return ':'.join((self.prefix, "rate", code))
