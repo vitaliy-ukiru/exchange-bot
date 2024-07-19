@@ -33,15 +33,9 @@ class DIProvider(Provider):
         )
 
     @provide(scope=Scope.APP)
-    async def get_redis_client(self, cfg: Config) -> Iterable[Redis]:
-        client = Redis.from_url(cfg.redis_uri)
-
-        try:
-            await client.ping()
-        except Exception as err:
-            raise ConnectionError("Failed connect to redis") from err
-
-        yield Redis
+    async def get_redis_client(self, cfg: Config) -> AsyncIterable[Redis]:
+        client = Redis.from_url(cfg.redis_url.unicode_string())
+        yield client
 
         await client.aclose()
 
