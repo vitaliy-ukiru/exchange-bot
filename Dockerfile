@@ -1,24 +1,5 @@
-LABEL author = "ukiru" description="Telegram CBR Exchage Bot"
-
-#
-#RUN apt-get update -y && \
-#    apt-get upgrade -y && \
-#    apt-get clean && \
-#    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-#
-#
-#COPY requirements.txt .
-#
-#RUN pip install --no-cache-dir --upgrade -r requirements.txt
-#
-#COPY . .
-#
-#USER app
-#
-#ENTRYPOINT ["python", "-m", "exchangebot"]
-
-
 FROM python:3.11-slim-buster as python-base
+LABEL author = "ukiru" description="Telegram CBR Exchage Bot"
 
 
 ENV POETRY_VERSION=1.5.1 \
@@ -48,4 +29,4 @@ RUN poetry check && \
 COPY .. .
 USER app
 ENTRYPOINT ["poetry", "run", "python", "-m", "exchangebot"]
-CMD ["poling"]
+CMD ["polling"]

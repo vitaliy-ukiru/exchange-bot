@@ -15,5 +15,3 @@ services:
 
     depends_on:
       - redis
-volumes:
-
